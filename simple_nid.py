@@ -454,17 +454,31 @@ def main():
                     "false_positives": 0
                 }
             
+            # Simulate threat data updating (add random threats)
+            if 'last_update' not in st.session_state:
+                st.session_state.last_update = time.time()
+            
+            current_time = time.time()
+            if current_time - st.session_state.last_update > 2:  # Update every 2 seconds
+                # Add some random threats
+                new_threats = random.randint(1, 5)
+                st.session_state.threat_stats["total"] += new_threats
+                st.session_state.threat_stats["high_severity"] += random.randint(0, 2)
+                st.session_state.threat_stats["blocked_ips"] += random.randint(0, 3)
+                st.session_state.threat_stats["false_positives"] += random.randint(0, 1)
+                st.session_state.last_update = current_time
+            
             # Threat statistics
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                st.metric("Total Threats", st.session_state.threat_stats["total"], "↗ 0")
+                st.metric("Total Threats", st.session_state.threat_stats["total"], f"↗ {random.randint(1, 5)}")
             with col2:
-                st.metric("High Severity", st.session_state.threat_stats["high_severity"], "↗ 0")
+                st.metric("High Severity", st.session_state.threat_stats["high_severity"], f"↗ {random.randint(0, 2)}")
             with col3:
-                st.metric("Blocked IPs", st.session_state.threat_stats["blocked_ips"], "↗ 0")
+                st.metric("Blocked IPs", st.session_state.threat_stats["blocked_ips"], f"↗ {random.randint(0, 3)}")
             with col4:
-                st.metric("False Positives", st.session_state.threat_stats["false_positives"], "↘ 0")
+                st.metric("False Positives", st.session_state.threat_stats["false_positives"], f"↘ {random.randint(0, 1)}")
             
             # Threat timeline chart
             st.markdown("#### Threat Activity Timeline")
@@ -541,6 +555,10 @@ def main():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+            
+            # Auto-refresh for real-time updates
+            time.sleep(2)
+            st.rerun()
         else:
             # Show empty state when monitoring is off
             st.markdown("""
