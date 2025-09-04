@@ -444,14 +444,7 @@ def main():
     with tab2:
         st.markdown("### Threat Intelligence Center")
         
-        if st.session_state.monitoring:
-            st.markdown("""
-            <div class="status-card warning">
-                <h4 style="color: #f59e0b; margin: 0;">Monitoring Active</h4>
-                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Stop monitoring to view threat intelligence data</p>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
+        if not st.session_state.monitoring:
             # Initialize threat statistics in session state if not exists
             if 'threat_stats' not in st.session_state:
                 st.session_state.threat_stats = {
@@ -552,14 +545,7 @@ def main():
     with tab3:
         st.markdown("### System Configuration")
         
-        if st.session_state.monitoring:
-            st.markdown("""
-            <div class="status-card warning">
-                <h4 style="color: #f59e0b; margin: 0;">Monitoring Active</h4>
-                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Stop monitoring to access system configuration</p>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
+        if not st.session_state.monitoring:
             col_config1, col_config2 = st.columns(2)
             
             with col_config1:
