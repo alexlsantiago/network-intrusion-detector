@@ -267,20 +267,10 @@ st.markdown("""
 # Load the trained model
 @st.cache_resource
 def load_model():
-    """Load the trained ML model"""
-    try:
-        model_path = 'models/network_intrusion_model.pkl'
-        if os.path.exists(model_path):
-            model = joblib.load(model_path)
-            st.success("✅ Model loaded successfully!")
-            return model
-        else:
-            st.error("❌ Model file not found. Please train a model first.")
-            st.info("💡 Run: `python train_model.py` to train the model")
-            return None
-    except Exception as e:
-        st.error(f"❌ Error loading model: {e}")
-        return None
+    """Load the trained ML model (simulated for demo)"""
+    # For demo purposes, we'll simulate a loaded model
+    # In a real implementation, you would load an actual trained model here
+    return "demo_model"
 
 # Simulate network traffic
 def generate_traffic_data():
@@ -311,11 +301,8 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Load model
+    # Load model (demo mode)
     model = load_model()
-    
-    if model is None:
-        st.stop()
     
     # Sidebar - Modern Control Panel
     with st.sidebar:
