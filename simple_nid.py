@@ -444,27 +444,27 @@ def main():
     with tab2:
         st.markdown("### Threat Intelligence Center")
         
-        if not st.session_state.monitoring:
+        if st.session_state.monitoring:
             # Initialize threat statistics in session state if not exists
             if 'threat_stats' not in st.session_state:
                 st.session_state.threat_stats = {
-                    "total": 127,
-                    "high_severity": 23,
-                    "blocked_ips": 45,
-                    "false_positives": 8
+                    "total": 0,
+                    "high_severity": 0,
+                    "blocked_ips": 0,
+                    "false_positives": 0
                 }
             
             # Threat statistics
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                st.metric("Total Threats", st.session_state.threat_stats["total"], "↗ 12")
+                st.metric("Total Threats", st.session_state.threat_stats["total"], "↗ 0")
             with col2:
-                st.metric("High Severity", st.session_state.threat_stats["high_severity"], "↗ 3")
+                st.metric("High Severity", st.session_state.threat_stats["high_severity"], "↗ 0")
             with col3:
-                st.metric("Blocked IPs", st.session_state.threat_stats["blocked_ips"], "↗ 7")
+                st.metric("Blocked IPs", st.session_state.threat_stats["blocked_ips"], "↗ 0")
             with col4:
-                st.metric("False Positives", st.session_state.threat_stats["false_positives"], "↘ 2")
+                st.metric("False Positives", st.session_state.threat_stats["false_positives"], "↘ 0")
             
             # Threat timeline chart
             st.markdown("#### Threat Activity Timeline")
@@ -541,6 +541,14 @@ def main():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+        else:
+            # Show empty state when monitoring is off
+            st.markdown("""
+            <div class="status-card warning">
+                <h4 style="color: #f59e0b; margin: 0;">No Data Available</h4>
+                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Start monitoring to view threat intelligence data</p>
+            </div>
+            """, unsafe_allow_html=True)
     
     with tab3:
         st.markdown("### System Configuration")
