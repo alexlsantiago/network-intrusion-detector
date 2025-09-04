@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-CyberShield - Advanced Network Intrusion Detection System
-A modern, sleek interface for network security monitoring
+Network Intrusion Detector - Advanced Network Security Monitoring System
+A modern, streamlined interface for network security monitoring and threat analysis
 """
 
 import streamlit as st
@@ -116,7 +116,7 @@ st.markdown("""
     }
     
     /* Custom header */
-    .cybershield-header {
+    .nid-header {
         background: linear-gradient(135deg, #374151 0%, #14b8a6 100%);
         padding: 2rem;
         border-radius: 15px;
@@ -124,7 +124,7 @@ st.markdown("""
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
     
-    .cybershield-title {
+    .nid-title {
         color: white;
         font-size: 2.5rem;
         font-weight: 700;
@@ -132,7 +132,7 @@ st.markdown("""
         text-align: center;
     }
     
-    .cybershield-subtitle {
+    .nid-subtitle {
         color: #e5e7eb;
         font-size: 1.1rem;
         text-align: center;
@@ -305,9 +305,9 @@ def generate_traffic_data():
 def main():
     # Custom header
     st.markdown("""
-    <div class="cybershield-header">
-        <h1 class="cybershield-title">Network Intrusion Detector</h1>
-        <p class="cybershield-subtitle">Advanced Network Security Monitoring & Threat Analysis</p>
+    <div class="nid-header">
+        <h1 class="nid-title">Network Intrusion Detector</h1>
+        <p class="nid-subtitle">Advanced Network Security Monitoring & Threat Analysis</p>
     </div>
     """, unsafe_allow_html=True)
     
