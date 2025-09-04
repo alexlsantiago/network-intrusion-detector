@@ -352,7 +352,7 @@ def main():
             st.success("Report exported!")
     
     # Main dashboard with tabs
-    tab1, tab2, tab3 = st.tabs(["Dashboard", "Threats", "Settings"])
+    tab1, tab2 = st.tabs(["Dashboard", "Settings"])
     
     with tab1:
         # Real-time metrics
@@ -442,135 +442,6 @@ def main():
             """, unsafe_allow_html=True)
     
     with tab2:
-        st.markdown("### Threat Intelligence Center")
-        
-        # Initialize threat statistics in session state if not exists
-        if 'threat_stats' not in st.session_state:
-            st.session_state.threat_stats = {
-                "total": 0,
-                "high_severity": 0,
-                "blocked_ips": 0,
-                "false_positives": 0
-            }
-        
-        # Simulate threat data updating when monitoring is active
-        if st.session_state.monitoring:
-            if 'last_update' not in st.session_state:
-                st.session_state.last_update = time.time()
-            
-            current_time = time.time()
-            if current_time - st.session_state.last_update > 2:  # Update every 2 seconds
-                # Add some random threats
-                new_threats = random.randint(1, 5)
-                st.session_state.threat_stats["total"] += new_threats
-                st.session_state.threat_stats["high_severity"] += random.randint(0, 2)
-                st.session_state.threat_stats["blocked_ips"] += random.randint(0, 3)
-                st.session_state.threat_stats["false_positives"] += random.randint(0, 1)
-                st.session_state.last_update = current_time
-            
-            # Auto-refresh for real-time updates
-            time.sleep(2)
-            st.rerun()
-        
-        # Show threat data (either live when monitoring or historical when stopped)
-        if st.session_state.threat_stats["total"] > 0 or st.session_state.monitoring:
-            # Threat statistics
-            col1, col2, col3, col4 = st.columns(4)
-            
-            with col1:
-                st.metric("Total Threats", st.session_state.threat_stats["total"], f"↗ {random.randint(1, 5)}")
-            with col2:
-                st.metric("High Severity", st.session_state.threat_stats["high_severity"], f"↗ {random.randint(0, 2)}")
-            with col3:
-                st.metric("Blocked IPs", st.session_state.threat_stats["blocked_ips"], f"↗ {random.randint(0, 3)}")
-            with col4:
-                st.metric("False Positives", st.session_state.threat_stats["false_positives"], f"↘ {random.randint(0, 1)}")
-            
-            # Threat timeline chart
-            st.markdown("#### Threat Activity Timeline")
-            timeline_data = pd.DataFrame({
-                'time': pd.date_range('2024-01-01', periods=24, freq='h'),
-                'threats': np.random.poisson(5, 24)
-            })
-            
-            fig = px.line(timeline_data, x='time', y='threats', 
-                         title="Threats Detected Over Time",
-                         color_discrete_sequence=['#dc2626'])
-            fig.update_layout(showlegend=False, height=300)
-            st.plotly_chart(fig, use_container_width=True)
-            
-            # Recent threats section
-            st.markdown("#### Recent Threat Alerts")
-            
-            # Initialize threats data in session state if not exists
-            if 'threats_data' not in st.session_state:
-                st.session_state.threats_data = [
-                    {"time": "14:32:15", "type": "Malware Detection", "src": "192.168.1.89", "level": "HIGH", "confidence": 0.88},
-                    {"time": "14:28:42", "type": "Brute Force", "src": "10.0.0.23", "level": "MEDIUM", "confidence": 0.73},
-                    {"time": "14:25:18", "type": "SQL Injection", "src": "192.168.1.156", "level": "HIGH", "confidence": 0.91},
-                    {"time": "14:22:05", "type": "DoS Attack", "src": "192.168.1.100", "level": "HIGH", "confidence": 0.95},
-                    {"time": "14:18:33", "type": "Port Scan", "src": "192.168.1.45", "level": "MEDIUM", "confidence": 0.78}
-                ]
-            
-            threats = st.session_state.threats_data
-            
-            # Display threats
-            for threat in threats:
-                level_class = threat["level"].lower()
-                st.markdown(f"""
-                <div class="threat-alert {level_class}">
-                    <strong>{threat['time']}</strong> - {threat['type']}<br>
-                    <small>Source: {threat['src']} | Confidence: {threat['confidence']:.0%}</small>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            # Threat categories breakdown
-            st.markdown("#### Threat Categories")
-            col_cat1, col_cat2 = st.columns(2)
-            
-            with col_cat1:
-                # Pie chart of threat types
-                threat_types = ['DoS', 'DDoS', 'Probe', 'R2L', 'U2R', 'Normal']
-                threat_counts = [45, 23, 18, 12, 8, 21]
-                
-                fig = px.pie(values=threat_counts, names=threat_types,
-                            color_discrete_sequence=['#dc2626', '#f59e0b', '#d97706', '#14b8a6', '#0d9488', '#10b981'])
-                fig.update_layout(height=300, showlegend=True)
-                st.plotly_chart(fig, use_container_width=True)
-            
-            with col_cat2:
-                # Top source IPs
-                st.markdown("**Top Threat Sources:**")
-                top_sources = [
-                    {"ip": "192.168.1.100", "threats": 23, "last_seen": "15:44:23"},
-                    {"ip": "10.0.0.15", "threats": 18, "last_seen": "15:43:58"},
-                    {"ip": "192.168.1.45", "threats": 15, "last_seen": "15:44:18"},
-                    {"ip": "192.168.1.78", "threats": 12, "last_seen": "15:44:12"},
-                    {"ip": "192.168.1.203", "threats": 9, "last_seen": "15:43:45"}
-                ]
-                
-                for source in top_sources:
-                    st.markdown(f"""
-                    <div class="metric-card" style="margin-bottom: 8px; padding: 12px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 600; color: var(--primary-color);">{source['ip']}</span>
-                            <span style="color: var(--danger-color); font-weight: 600;">{source['threats']} threats</span>
-                        </div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">
-                            Last seen: {source['last_seen']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-        else:
-            # Show empty state when no data has been collected
-            st.markdown("""
-            <div class="status-card warning">
-                <h4 style="color: #f59e0b; margin: 0;">No Data Available</h4>
-                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Start monitoring to collect threat intelligence data</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    with tab3:
         st.markdown("### System Configuration")
         
         if not st.session_state.monitoring:
