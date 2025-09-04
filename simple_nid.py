@@ -444,17 +444,17 @@ def main():
     with tab2:
         st.markdown("### Threat Intelligence Center")
         
+        # Initialize threat statistics in session state if not exists
+        if 'threat_stats' not in st.session_state:
+            st.session_state.threat_stats = {
+                "total": 0,
+                "high_severity": 0,
+                "blocked_ips": 0,
+                "false_positives": 0
+            }
+        
+        # Simulate threat data updating when monitoring is active
         if st.session_state.monitoring:
-            # Initialize threat statistics in session state if not exists
-            if 'threat_stats' not in st.session_state:
-                st.session_state.threat_stats = {
-                    "total": 0,
-                    "high_severity": 0,
-                    "blocked_ips": 0,
-                    "false_positives": 0
-                }
-            
-            # Simulate threat data updating (add random threats)
             if 'last_update' not in st.session_state:
                 st.session_state.last_update = time.time()
             
@@ -468,6 +468,12 @@ def main():
                 st.session_state.threat_stats["false_positives"] += random.randint(0, 1)
                 st.session_state.last_update = current_time
             
+            # Auto-refresh for real-time updates
+            time.sleep(2)
+            st.rerun()
+        
+        # Show threat data (either live when monitoring or historical when stopped)
+        if st.session_state.threat_stats["total"] > 0 or st.session_state.monitoring:
             # Threat statistics
             col1, col2, col3, col4 = st.columns(4)
             
@@ -555,16 +561,12 @@ def main():
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-            
-            # Auto-refresh for real-time updates
-            time.sleep(2)
-            st.rerun()
         else:
-            # Show empty state when monitoring is off
+            # Show empty state when no data has been collected
             st.markdown("""
             <div class="status-card warning">
                 <h4 style="color: #f59e0b; margin: 0;">No Data Available</h4>
-                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Start monitoring to view threat intelligence data</p>
+                <p style="margin: 0.5rem 0 0 0; color: #6b7280;">Start monitoring to collect threat intelligence data</p>
             </div>
             """, unsafe_allow_html=True)
     
